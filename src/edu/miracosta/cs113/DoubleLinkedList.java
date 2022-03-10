@@ -10,14 +10,6 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
     private Node<E> mTail= null;
     private int size = 0;
 
-    //defualt constructor
-    //TODO constructors
-
-  /*  public DoubleLinkedList() {
-        mHead = null;
-        mTail = null;
-        size = 0;
-    }*/
 
     public boolean isEmpty(){
         return mHead==null;
@@ -28,22 +20,19 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
      * @param obj The object to be inserted
      * @throw IndexOutOfBoundsException if the index is out of range (i < 0 || i > size() */
     public void add(int index, E obj) {
-        //.add creates a new node with E object
-        //TODO not sure if i need to bounds check here or if that it done in the constructor of ListIter -
-        // slides say we dont need to declare one the method call will return a ListIter obj - so if in
-        // our constuctor for a ListIter we bounds check why would we need to here - so why do I need new??
-        if (index < 0 || index > size)
-            throw new IndexOutOfBoundsException();
-        new ListIter(index).add(obj);
+
+        listIterator(index).add(obj);
     }
 
     //same has add but we use a literal for the index
     public void addFirst(E obj) {
+
         add(0, obj);
     }
 
-    //TODO why not size -1? B/C the iter always points btwn to nodes? HHHH no
+
     public void addLast(E obj) {
+
         add(size, obj);
     }
 
@@ -52,11 +41,11 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
         {
             throw new IndexOutOfBoundsException();
         }
-        //create new iterator at index i - iter willl be constructed at that index, which is just before the
+        //create new iterator at index i - iter will be constructed at that index, which is just before the
         // .data that we want to return so return iter.next
         ListIterator<E> iter = listIterator(i);
         return iter.next();
-        // return new ListIter(i).next();
+
     }
 
     public E getFirst() {
@@ -74,12 +63,18 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
         return size;
     }
 
+    //helper method remove() in ListIter class
     public E remove(int i) {
-        //use remove from iter class
+
+        //instantiate a new object = to null
         E returnValue = null;
+        //new ListIterator at the specified index
         ListIterator<E> iter = listIterator(i);
+        //loop through list
         if (iter.hasNext())
-        {   returnValue = iter.next();
+        {
+            returnValue = iter.next();
+            //remove that item
             iter.remove();
         }
         else {   throw new IndexOutOfBoundsException();  }
@@ -87,14 +82,12 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
 
     }
 
-    //defualt constructor == a new iter that starts at the head
     public ListIterator<E> listIterator(){
         return new ListIter(0);
     }
     public ListIterator<E> listIterator(int index){
         return new ListIter(index);
     }
-  //needed ListIter(ListIter other) done first in ListIter class
     public ListIterator<E> listIterator(ListIter iter){
         return new ListIter( iter);
     }
@@ -112,11 +105,11 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
                 throw new IndexOutOfBoundsException("Invalid index " + i);
             }
             lastItemReturned = null;  //no item returned yet
-            //special case of last item- then theres nothing to return, we set index(the iterator to size) and set nextItem to null
+            //special case of last item- then there's nothing to return, we set index(the iterator to size) and set nextItem to null
             if (i == size) {
                 index = size;
                 nextItem = null;
-            } else { // if its not the same as size we need to loop through to get our index positioned
+            } else { // if it's not the same as size we need to loop through to get our index positioned
                 //start at head
                 nextItem = mHead;
                 for (index = 0; index < i; index++) {
@@ -140,7 +133,7 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
          * 4 special cases: add to empty list, add to head of list, add to tail of list and add to middle of the list
          */
         public void add(E e) {
-            //add to an empty list - an empty list is indicated by head equalt to null
+            //add to an empty list - an empty list is indicated by head equal to null
             if (mHead == null) {
                 mHead = new Node<>(e);
                 mTail = mHead;
@@ -151,7 +144,7 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
                 Node<E> newNode = new Node<>(e);
                 //link it to the nextItem
                 newNode.mNext = nextItem;
-                //link link nextItem to the new Node
+                //link  nextItem to the new Node
                 nextItem.mPrevious = newNode;
                 //the new node is now the head
                 mHead = newNode;
@@ -162,7 +155,7 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
                 Node<E> newNode = new Node<>(e);
                 //link the tail to the new node
                 mTail.mNext = newNode;
-                //link the new node ot the tail
+                //link the new node to the tail
                 newNode.mPrevious = mTail;
                 //the new node is the new tail
                 mTail = newNode;
@@ -189,8 +182,7 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
          * returns ture if next will not throw an exception
          */
         public boolean hasNext() {
-            //nextItem will always reference the Ode that will be returned by the next()
-            //only need to determine if nextItem is nulll
+            //determine if nextItem is null
             return nextItem != null;
         }
 
@@ -217,9 +209,8 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
          * if not at the end, then nextItem is not null, and we can check for a previous item by examining nextItem.prev
          */
         public boolean hasPrevious() {
-            //if size == 0 its an empty list, we cant have a prev AND if the next item is null that implies its the last so something likely comes before it
+            //if size == 0 its an empty list, we can't have a prev AND if the next item is null then we are at tail
             //if nextItem.previous is null then there is no previous data
-            //if nextItem is null and the size is not 0 it implies the end of the list so then check if the previous is null
             return size != 0 && (nextItem == null  || nextItem.mPrevious != null);
         }
 
@@ -279,7 +270,7 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
                 if (size > 1) {
                     //remove the head by setting the next node to the head
                     mHead = lastItemReturned.mNext;
-                    //and the new head's prev to null (the head's prev is always null, one way we know its the head)
+                    //and the new head's prev to null (the head's prev is always null, one way we know it's the head)
                     mHead.mPrevious = null;
                 }
                 else { //size is 0 so all that is left is the head, set to null to remove
@@ -299,18 +290,14 @@ public class DoubleLinkedList<E> extends AbstractSequentialList<E> {
                 //if in the middle
                 else {
 
-                    //now we are at the one to be deleted
-                    //first set the prev node to curent's next  to iter.next
+                    //first set the prev node to lastItemReturned's next to lastItemReturned.next
                    lastItemReturned.mPrevious.mNext = lastItemReturned.mNext;
-                    //now need to connect currents next prev slot with currents prev
+                    //now need to connect lastItemReturned's next prev slot with lastItemReturned's prev
                     lastItemReturned.mNext.mPrevious = lastItemReturned.mPrevious;
                 }
                 size--;
 
             }//remove()
-
-
-        //TODO void set(E obj)
 
         /**
          * replaces the last item returned from a call to next or previous with obj. If a call to set is not precedded
